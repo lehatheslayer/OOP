@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 namespace Lab1 {
   public class FileException : Exception {
-    public FileException(string message)
-      :base(message)
-    { }
+    public FileException(string message) : base(message) {}
+  }
+  public class TypeException : Exception {
+    public TypeException(string message) : base(message) {}
   }
 }
