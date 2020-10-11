@@ -1,0 +1,82 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace Lab2 {
+  public class Product {
+    private string name_;
+    private int quanity_;
+    private int cost_;
+    public Product() { }
+    public Product(string name, int quanity, int cost) {
+      name_ = name;
+      quanity_ = quanity;
+      cost_ = cost;
+    }
+    public string getName() {
+      return name_;
+    }
+    public int getQuanity() {
+      return quanity_;
+    }
+    public int getCost() {
+      return cost_;
+    }
+    public void setCost(int cost) {
+      cost_ = cost;
+    }
+    public void increaseQuanity(int quanity) {
+      quanity_ += quanity;
+    }
+  }
+  public class Shop {
+    private string name_;
+    private string address_;
+    private Dictionary<string, Product> product = new Dictionary<string, Product>();
+    public Shop() { }
+    public Shop(string name, string address) {
+      name_ = name;
+      address_ = address;
+    }
+    public void AddProduct(string key, string name, int cost, int quanity) {
+      if (!product.ContainsKey(key)) {
+        Product sub = new Product(name, quanity, cost);
+        product.Add(key, sub);
+      }
+      else {
+        product[key].increaseQuanity(quanity);
+        if (product[key].getCost() != cost) {
+          product[key].setCost(cost);
+        }
+      }
+    }
+    public void changeCost(string key, int cost) {
+      product[key].setCost(cost);
+    }
+    public void getProduct(string key) {
+      Console.WriteLine(key + ": ");
+      Console.WriteLine(product[key].getName());
+      Console.WriteLine(product[key].getCost());
+      Console.WriteLine(product[key].getQuanity());
+    }
+  }
+  public class AllShops {
+    private Dictionary<string, Shop> shops = new Dictionary<string, Shop>();
+    public AllShops() { }
+    public void createShop(string key, string name, string address) {
+      try {
+        if (shops.ContainsKey(key)) {
+          throw new Exception("Такой магазин уже существует");
+        }
+      }
+      catch(Exception e) {
+        Console.WriteLine($"{e.Message}");
+        return;
+      }
+      Shop sub = new Shop(name, address);
+      shops.Add(key, sub);
+    }
+  }
+}

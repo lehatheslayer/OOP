@@ -1,0 +1,12 @@
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/bin/Debug/netcoreapp3.1/Lab2.deps.json
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/bin/Debug/netcoreapp3.1/Lab2.runtimeconfig.json
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/bin/Debug/netcoreapp3.1/Lab2.runtimeconfig.dev.json
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/bin/Debug/netcoreapp3.1/Lab2.dll
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/bin/Debug/netcoreapp3.1/Lab2.pdb
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.csprojAssemblyReference.cache
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.AssemblyInfoInputs.cache
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.AssemblyInfo.cs
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.csproj.CoreCompileInputs.cache
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.dll
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.pdb
+/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab2/obj/Debug/netcoreapp3.1/Lab2.genruntimeconfig.cache
