@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace Lab2 {
   class Program {
     static void Main() {
-      AllShops markets = new AllShops();
+      ShopManager markets = new ShopManager();
       markets.CreateShop("id_1", "pyaterochka", "202");
       markets.CreateShop("id_2", "katarina", "202");
       markets.CreateShop("id_3", "pegas", "lenina");
