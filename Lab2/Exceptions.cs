@@ -3,9 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace Lab1 {
-  public class FileException : Exception {
-    public FileException(string message) : base(message) {}
+namespace Lab2 {
+  public class KeyNotFoundException : Exception {
+    public KeyNotFoundException(string message) : base(message) {}
   }
   public class TypeException : Exception {
     public TypeException(string message) : base(message) {}

@@ -8,12 +8,16 @@ namespace Lab2 {
   public class Shop {
     private string name_;
     private string address_;
+
     private Dictionary<string, Product> product = new Dictionary<string, Product>();
+
     public Shop() { }
+
     public Shop(string name, string address) {
       name_ = name;
       address_ = address;
     }
+
     public void AddProduct(string key, string name, int cost, int quanity) {
       if (!product.ContainsKey(key)) {
         Product sub = new Product(name, quanity, cost);
@@ -26,9 +30,11 @@ namespace Lab2 {
         }
       }
     }
+
     public void ChangeCost(string key, int cost) {
       product[key].SetCost(cost);
     }
+
     public void GetProductInfo(string key) {
       try {
         if (!this.GetProducts().ContainsKey(key)) {
@@ -45,6 +51,7 @@ namespace Lab2 {
       Console.WriteLine("Цена: " + product[key].GetCost());
       Console.WriteLine("Количество: " + product[key].GetQuanity());
     }
+
     public void BuyProduct(int quanity, string productKey) {
       try {
         if (!product.ContainsKey(productKey)) {
@@ -62,12 +69,13 @@ namespace Lab2 {
       product[productKey].IncreaseQuanity(quanity);
       Console.WriteLine("Вы успешно приобрели " + quanity + " единиц товара " + product[productKey].GetName());
     }
+
     public Dictionary<string, Product> GetProducts() {
       return product;
     }
+
     public string GetName() {
       return name_;
     }
   }
-
 }

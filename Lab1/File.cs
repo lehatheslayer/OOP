@@ -17,20 +17,33 @@ namespace Lab1 {
           s = fs.ReadLine();
           continue;
         }
-        if (s[0] == '[' && s != "") {
+        if (s[0] == '[' && s[s.Length - 1] == ']') {
           sectionName = s.Trim(new char[] { '[', ']' });
-          if (Regex.IsMatch(sectionName, @"[^a-zA-Z0-9_]")) {
-            throw new Exception("Error: неправильное название секции");
+          try {
+            if (Regex.IsMatch(sectionName, @"[^a-zA-Z0-9_]")) {
+              throw new WrongNameException("Error: неправильное название секции");
+            }
+          }
+          catch(WrongNameException e) {
+            Console.WriteLine($"{e.Message}");
+            Environment.Exit(-1);
           }
           block.Add(sectionName, new Dictionary<string, string>());
         }
         else if (s != ""){
+          try {
+            if (!Regex.IsMatch(s, "[0-9a-zA-Z_]+ = [0-9a-zA-Z_/\\.]+ *(;.*)?$") || sectionName == "") {
+              throw new WrongNameException("Error: поврежденный ini-файл");
+            }
+          }
+          catch(WrongNameException e) {
+            Console.WriteLine($"{e.Message}");
+            Environment.Exit(-1);
+          }
           string[] words = s.Split(new char[] { '=' });
+
           words[0] = words[0].TrimEnd();
           words[1] = words[1].TrimStart();
-          if (Regex.IsMatch(words[0], @"[^a-zA-Z0-9_]")) {
-            throw new Exception("Error: неправильное название объекта");
-          }
           if (block[sectionName].ContainsKey(words[0])) {
             block[sectionName][words[0]] = words[1];
           }
@@ -54,6 +67,7 @@ namespace Lab1 {
       }
       return default(T);
     }
+
     public void menu() {
       while (true) {
         Console.WriteLine("Введите название секции или exit, чтобы выйти:");
@@ -88,6 +102,7 @@ namespace Lab1 {
         }
       }
     }
+
     public void Exit(string txt) {
       if (txt == "exit")
         Environment.Exit(0);

@@ -14,7 +14,7 @@ namespace Lab1 {
           throw new FileException("Error: invalid chars found");
         }
         if (words.Length == 1) {
-          throw new FileException("Error: your file don't have the extension");
+          throw new FileException("Error: your file doesn't have the extension");
         }
         if (words[1] != "ini") {
           throw new FileException("Error: wrong file extension");
