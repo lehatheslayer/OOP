@@ -27,6 +27,11 @@ namespace Lab2 {
       catch(Exception) {
         Console.WriteLine("pizdec");
       }
+      Pair<string, int>[] goods = new Pair<string, int>[3];
+      goods[0] = new Pair<string, int>(); goods[1] = new Pair<string, int>(); goods[2] = new Pair<string, int>();
+      goods[0].First = "id_11"; goods[1].First = "id_12"; goods[2].First = "id_13";
+      goods[0].Second = 4; goods[1].Second = 12; goods[2].Second = 50;
+      markets.TheCheapestNumberOfGoods(goods);
     }
   }
 }

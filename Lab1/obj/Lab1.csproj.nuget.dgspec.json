@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab1/Lab1.csproj": {}
+    "C:\\Study\\2\\OOP\\Lab1\\Lab1.csproj": {}
   },
   "projects": {
-    "/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab1/Lab1.csproj": {
+    "C:\\Study\\2\\OOP\\Lab1\\Lab1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab1/Lab1.csproj",
+        "projectUniqueName": "C:\\Study\\2\\OOP\\Lab1\\Lab1.csproj",
         "projectName": "Lab1",
-        "projectPath": "/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab1/Lab1.csproj",
-        "packagesPath": "/Users/tatanaresetnikova/.nuget/packages/",
-        "outputPath": "/Users/tatanaresetnikova/Documents/GitHub/OOP/Lab1/obj/",
+        "projectPath": "C:\\Study\\2\\OOP\\Lab1\\Lab1.csproj",
+        "packagesPath": "C:\\Users\\Admistrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Study\\2\\OOP\\Lab1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/tatanaresetnikova/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Admistrator\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -50,7 +50,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.402/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Lab2 {
+  public class Pair<T, K> {
+		public T First{ get; set; }
+    public K Second{ get; set; }
+	}
   public class ShopManager {
     private Dictionary<string, Shop> shops = new Dictionary<string, Shop>();
     public ShopManager() { }
@@ -71,6 +75,41 @@ namespace Lab2 {
       }
       foreach (KeyValuePair<string, Product> product in this.GetShops()[key].GetProducts()) {
         Console.WriteLine("Можно купить " + money / product.Value.GetCost() + " " + product.Value.GetName() + " в магазине " + this.GetShops()[key].GetName());
+      }
+      return;
+    }
+    public void TheCheapestNumberOfGoods(Pair<string, int>[] goods) {
+      for (int i = 0; i < goods.Length; i++) {
+        //Console.WriteLine(goods[i].First + " " + goods[i].Second);
+        int MinCost = 99999999;
+        int n = -1;
+        bool flag = false;
+        Shop ShopId = new Shop();
+        foreach (KeyValuePair<string, Shop> shop in this.GetShops()) {
+          try {
+            if (!shop.Value.GetProducts().ContainsKey(goods[i].First)) {
+              throw new Exception ("В магазине " + shop.Value.GetName() + " нет(никогда не было) товара " + goods[i].First);
+            }
+            else if (shop.Value.GetProducts()[goods[i].First].GetQuanity() < goods[i].Second) {
+              throw new Exception ("В магазине " + shop.Value.GetName() + " товаров " + shop.Value.GetProducts()[goods[i].First].GetName() + " меньше, чем " + goods[i].Second);
+            }
+          }
+          catch (Exception e) {
+            //Console.WriteLine($"{e.Message}");
+            continue;
+          }
+          if (shop.Value.GetProducts()[goods[i].First].GetCost() * goods[i].Second < MinCost) {
+            MinCost = shop.Value.GetProducts()[goods[i].First].GetCost() * goods[i].Second;
+            ShopId = shop.Value;
+            flag = true;
+            n = i;
+          }
+        }
+        if (flag) {
+          Console.WriteLine("В магазине " + ShopId.GetName() + " дешевле всего купить " + goods[i].Second + " " + ShopId.GetProducts()[goods[i].First].GetName() + ", чем в других");
+        } else {
+          Console.WriteLine("Ни в одном магазине невозможно купить " + goods[i].Second + " штук продукта с ключом " + goods[i].First);
+        }
       }
       return;
     }

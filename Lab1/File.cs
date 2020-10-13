@@ -31,7 +31,12 @@ namespace Lab1 {
           if (Regex.IsMatch(words[0], @"[^a-zA-Z0-9_]")) {
             throw new Exception("Error: неправильное название объекта");
           }
-          block[sectionName].Add(words[0], words[1]);
+          if (block[sectionName].ContainsKey(words[0])) {
+            block[sectionName][words[0]] = words[1];
+          }
+          else {
+            block[sectionName].Add(words[0], words[1]);
+          }
         }
         s = fs.ReadLine();
       }
