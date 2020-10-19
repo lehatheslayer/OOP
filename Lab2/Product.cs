@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Lab2{
+namespace Lab2 {
   public class Product {
     private string name_;
     private int quanity_;
     private int cost_;
-
-    public Product() { }
 
     public Product(string name, int quanity, int cost) {
       name_ = name;
@@ -37,7 +35,7 @@ namespace Lab2{
     public void IncreaseQuanity(int quanity) {
       quanity_ += quanity;
     }
-    
+
     public void DecreaseQuanity(int quanity) {
       quanity_ -= quanity;
     }

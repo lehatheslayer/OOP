@@ -8,34 +8,33 @@ namespace Lab2 {
   public class Shop {
     private string name_;
     private string address_;
+    private Dictionary<int, Product> product = new Dictionary<int, Product>();
 
-    private Dictionary<string, Product> product = new Dictionary<string, Product>();
-
-    public Shop() { }
+    public Shop() {}
 
     public Shop(string name, string address) {
       name_ = name;
       address_ = address;
     }
 
-    public void AddProduct(string key, string name, int cost, int quanity) {
-      if (!product.ContainsKey(key)) {
-        Product sub = new Product(name, quanity, cost);
-        product.Add(key, sub);
+    public void AddProduct(Dictionary<int, Product> product, int cost, int quanity, int id) {
+      if (!this.GetProducts().ContainsKey(id)) {
+        Product sub = new Product(product[id].GetName(), quanity, cost);
+        this.GetProducts().Add(id, sub);
       }
       else {
-        product[key].IncreaseQuanity(quanity);
-        if (product[key].GetCost() != cost) {
-          product[key].SetCost(cost);
+        this.GetProducts()[id].IncreaseQuanity(quanity);
+        if (this.GetProducts()[id].GetCost() != cost) {
+          this.GetProducts()[id].SetCost(cost);
         }
       }
     }
 
-    public void ChangeCost(string key, int cost) {
+    public void ChangeCost(int key, int cost) {
       product[key].SetCost(cost);
     }
 
-    public void GetProductInfo(string key) {
+    public void GetProductInfo(int key) {
       try {
         if (!this.GetProducts().ContainsKey(key)) {
           throw new Exception("Такого товара в магазине " + this.GetName() +" нет");
@@ -52,7 +51,7 @@ namespace Lab2 {
       Console.WriteLine("Количество: " + product[key].GetQuanity());
     }
 
-    public void BuyProduct(int quanity, string productKey) {
+    public void BuyProduct(int quanity, int productKey) {
       try {
         if (!product.ContainsKey(productKey)) {
           throw new Exception ("В магазине " + this.GetName() + " нет товара " + productKey);
@@ -66,11 +65,11 @@ namespace Lab2 {
         Console.WriteLine("Количество товаров " + product[productKey].GetName() + " меньше, чем количество, которое вы хотите купить");
         return;
       }
-      product[productKey].IncreaseQuanity(quanity);
+      product[productKey].IncreaseQuanity(quanity * (-1));
       Console.WriteLine("Вы успешно приобрели " + quanity + " единиц товара " + product[productKey].GetName());
     }
 
-    public Dictionary<string, Product> GetProducts() {
+    public Dictionary<int, Product> GetProducts() {
       return product;
     }
 
