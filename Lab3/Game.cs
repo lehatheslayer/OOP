@@ -1,99 +1,158 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lab3 {
   public class Game {
-    private Dictionary<int, Transport> Transports = new Dictionary<int, Transport>();
-    private Dictionary<int, Land> TransportsL = new Dictionary<int, Land>();
-    private int TransportId = 0;
+    private Dictionary<int, Air> Air = new Dictionary<int, Air>();
+    private Dictionary<int, Land> Land = new Dictionary<int, Land>();
+    private int Id = 0;
 
     public Game() { }
 
-    public void AddLand(string name, int speed, int interval, int duration) {
-      Land obj = new Land(name, speed, 0, interval, duration);
-      TransportsL.Add(TransportId, obj);
-      TransportId += 1;
+    public void AddLand(string name, int speed, int interval, double[] duration) {
+      Land obj = new Land(name, speed, interval, duration);
+      Land.Add(Id, obj);
+      Id += 1;
     }
-    public void AddAir(string name, int speed, int reducer) {
-      Transport obj = new Air(name, speed, 1, reducer);
-      Transports.Add(TransportId, obj);
-      TransportId += 1;
+    public void AddAir(string name, int speed, int[] reducer, int[] interval, bool e) {
+      Air obj = new Air(name, speed, reducer, interval, e);
+      Air.Add(Id, obj);
+      Id += 1;
     }
 
-    public double LandFormula(Land obj, int distance) {
-        if (obj.GetName() == "двугорбый верблюд") {
-          return distance / obj.GetSpeed() + 5 + (Convert.ToInt32(distance / (obj.GetSpeed() * obj.GetRestInterval())) - 1) * 8;
+    public double LandTime(int id, double distance) {
+      int speed = this.GetLand()[id].GetSpeed();
+      int interval = this.GetLand()[id].GetRestInterval();
+      double[] duration = this.GetLand()[id].GetRestDuration();
+      int restnumber =  Convert.ToInt32(distance / (speed * interval));
+      double totalrest = 0;
+      int flag = 0;
+      for (int i = 0; i < restnumber; i++) {
+        if (i <= duration.Length - 1) {
+          flag = i;
+          totalrest += duration[i];
         }
-        if (obj.GetName() == "верблюд-быстроход") {
-          return distance / obj.GetSpeed() + 5 + 6.5 + (Convert.ToInt32(distance / (obj.GetSpeed() * obj.GetRestInterval())) - 2) * 8;
+        else {
+          totalrest += duration[flag];
         }
-        if (obj.GetName() == "кентавр") {
-          return distance / obj.GetSpeed() + Convert.ToInt32(distance / (obj.GetSpeed() * obj.GetRestInterval())) * 2;
-        }
-        if (obj.GetName() == "ботинки-вездеходы") {
-          return distance / obj.GetSpeed() + 10 + (Convert.ToInt32(distance / (obj.GetSpeed() * obj.GetRestInterval())) - 1) * 5;
-        }
-        return default;
+      }
+      double time = totalrest + distance / speed;
+      return time;
     }
-    public double AirFormula(Air obj, int distance) {
-        if (obj.GetName() == "ковер-самолет") {
-          if (distance <= 1000) {
-            return distance / obj.GetSpeed();
-          }
-          else if (distance <= 5000) {
-            return 1.06 * distance / obj.GetSpeed();
-          }
-          else if (distance <= 10000) {
-            return 1.1 * distance / obj.GetSpeed();
+    public double AirTime(int id, double distance) {
+      int speed = this.GetAir()[id].GetSpeed();
+      int[] interval = this.GetAir()[id].GetDistanceInterval();
+      int[] reducer = this.GetAir()[id].GetDistanceReducer();
+      bool e = this.GetAir()[id].GetEvenly();
+      double time = 0;
+      int r = 0;
+      if (e == true) {
+        while(true) {
+          r += reducer[0];
+          distance -= interval[0];
+          if (distance >= 0) {
+            time += (100 + r) / 100 * interval[0] / speed;
+            if (distance == 0)
+              return time;
+            r += reducer[0];
           }
           else {
-            return 1.05 * distance / obj.GetSpeed();
+            time += (100 + r) / 100 * (interval[0] + distance) / speed;
+            return time;
           }
         }
-        if (obj.GetName() == "ступа") {
-          return (100 + obj.GetDistanceReducer()) / 100 * distance / obj.GetSpeed();
+      }
+      else {
+        if (interval.Length == 0) {
+          return (100 + reducer[0]) / 100 * distance / speed;
         }
-        if (obj.GetName() == "метла") {
-          return (100 + distance / 1000) / 100 * distance / obj.GetSpeed();
+        for (int i = 0; i < interval.Length; i++) {
+          if (distance < interval[i]) {
+            r = i;
+            break;
+          }
         }
-        return default;
+        return (100 + reducer[r]) / 100 * distance / speed;
+      }
     }
 
-    public void StartRace(int type, int distance) {
-      double min = 9999;
-      string name = ";";
+    public void Race(int type, int[] ids, double distance) {
+      double Min = 999999;
+      int MinId = -1;
       switch (type) {
-        case 0:
-          foreach(KeyValuePair<int, Land> tr in this.GetTransportsL()) {
-            if (tr.Value.GetType() == 0) {
-              if (LandFormula(tr.Value, distance) < min) {
-                min = LandFormula(tr.Value, distance);
-                name = tr.Value.GetName();
-              }
+        case 0: //land
+          for (int i = 0; i < ids.Length; i++) {
+            if (!this.GetLand().ContainsKey(ids[i])) {
+              Console.WriteLine("Наземного транспорта с id " + ids[i] + " не существует");
+              return;
             }
           }
-          Console.WriteLine("Land Race: " + name);
+          Console.WriteLine("Гонка началась");
+          for (int i = 0; i < ids.Length; i++) {
+            if (Min > this.LandTime(ids[i], distance)) {
+              Min = this.LandTime(ids[i], distance);
+              MinId = ids[i];
+            }
+          }
+          Console.WriteLine("Победитель гонки: " + this.GetLand()[MinId].GetName());
           break;
-        case 1:
-          Console.WriteLine("Air");
+        case 1: //air
+          for (int i = 0; i < ids.Length; i++) {
+            if (!this.GetAir().ContainsKey(ids[i])) {
+              Console.WriteLine("Воздушного транспорта с id " + ids[i] + " не существует");
+              return;
+            }
+          }
+          Console.WriteLine("Гонка началась");
+          for (int i = 0; i < ids.Length; i++) {
+            if (Min > this.AirTime(ids[i], distance)) {
+              Min = this.AirTime(ids[i], distance);
+              MinId = ids[i];
+            }
+          }
+          Console.WriteLine("Победитель гонки: " + this.GetAir()[MinId].GetName());
           break;
-        case 2:
-          Console.WriteLine("all");
+        case 2: //air&land
+          Console.WriteLine("Гонка началась");
+          for (int i = 0; i < ids.Length; i++) {
+            if (!this.GetAir().ContainsKey(ids[i]))
+              continue;
+            if (Min > this.AirTime(ids[i], distance)) {
+              Min = this.AirTime(ids[i], distance);
+              MinId = ids[i];
+            }
+          }
+          for (int i = 0; i < ids.Length; i++) {
+            if (!this.GetLand().ContainsKey(ids[i]))
+              continue;
+            if (Min > this.LandTime(ids[i], distance)) {
+              Min = this.LandTime(ids[i], distance);
+              MinId = ids[i];
+            }
+          }
+          if (!this.GetAir().ContainsKey(MinId))
+            Console.WriteLine("Победитель гонки: " + this.GetLand()[MinId].GetName());
+          else
+            Console.WriteLine("Победитель гонки: " + this.GetAir()[MinId].GetName());
           break;
       }
     }
 
     public void Display() {
-      foreach(KeyValuePair<int, Transport> tr in this.GetTransports()) {
-        Console.WriteLine(tr.Key + tr.Value.GetName() + " " + tr.Value.GetSpeed());
-      }
+      Console.WriteLine("Air:");
+      foreach(KeyValuePair<int, Air> tr in this.GetAir())
+        Console.WriteLine(tr.Key + " " + tr.Value.GetName() + " " + tr.Value.GetSpeed());
+      Console.WriteLine("Land:");
+      foreach(KeyValuePair<int, Land> tr in this.GetLand())
+        Console.WriteLine(tr.Key + " " + tr.Value.GetName() + " " + tr.Value.GetSpeed());
     }
 
-    public Dictionary<int, Transport> GetTransports() {
-      return Transports;
+    public Dictionary<int, Air> GetAir() {
+      return Air;
     }
-    public Dictionary<int, Land> GetTransportsL() {
-      return TransportsL;
+    public Dictionary<int, Land> GetLand() {
+      return Land;
     }
 
   }
