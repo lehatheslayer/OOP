@@ -9,7 +9,6 @@ namespace Lab2 {
     private string name_;
     private string address_;
     private Dictionary<int, Product> product = new Dictionary<int, Product>();
-
     public Shop() {}
 
     public Shop(string name, string address) {
@@ -17,9 +16,9 @@ namespace Lab2 {
       address_ = address;
     }
 
-    public void AddProduct(Dictionary<int, Product> product, int cost, int quanity, int id) {
+    public void AddProduct(int cost, int quanity, int id, ProductManager product) {
       if (!this.GetProducts().ContainsKey(id)) {
-        Product sub = new Product(product[id].GetName(), quanity, cost);
+        Product sub = new Product(product.GetProduct()[id].GetName(), quanity, cost);
         this.GetProducts().Add(id, sub);
       }
       else {

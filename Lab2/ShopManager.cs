@@ -13,6 +13,37 @@ namespace Lab2 {
   public class ShopManager {
     private Dictionary<int, Shop> shops = new Dictionary<int, Shop>();
     private int shopIds = 0;
+    private ProductManager products = new ProductManager();
+
+    public ShopManager() {
+      products.CreateProduct("Power Threads"); //0
+      products.CreateProduct("Arcane boots"); //1
+      products.CreateProduct("Reaper"); //2
+      products.CreateProduct("Satanic"); //3
+      products.CreateProduct("Manta Style"); //4
+      products.CreateProduct("Bracers"); //5
+      products.CreateProduct("Circlet"); //6
+      products.CreateProduct("Boots of speed"); //7
+      products.CreateProduct("Travel boots"); //8
+      products.CreateProduct("Sange And Yasha"); //9
+      products.CreateProduct("Blink dagger"); //10
+    }
+
+    public void AddProductToShop(int cost, int quanity, int pid, int sid) {
+      if (!this.GetProductManager().GetProduct().ContainsKey(pid)) {
+        Console.WriteLine("Нет такого продукта");
+        return;
+      }
+      if (!this.GetShops().ContainsKey(sid)) {
+        Console.WriteLine("Нет такого магазина");
+        return;
+      }
+      this.GetShop(sid).AddProduct(cost, quanity, pid, GetProductManager());
+    }
+
+    public ProductManager GetProductManager() {
+      return products;
+    }
 
     public void CreateShop(string name, string address) {
       Shop subject = new Shop(name, address);
