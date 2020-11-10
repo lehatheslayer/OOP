@@ -4,156 +4,99 @@ using System.Threading;
 
 namespace Lab3 {
   public class Game {
-    private Dictionary<int, Air> Air = new Dictionary<int, Air>();
-    private Dictionary<int, Land> Land = new Dictionary<int, Land>();
-    private int Id = 0;
+    private List<Transport> Transports;
+    private int RaceType;
+    private List<int> RegisteredTransports;
+    private int Distance;
 
-    public Game() { }
-
-    public void AddLand(string name, int speed, int interval, double[] duration) {
-      Land obj = new Land(name, speed, interval, duration);
-      Land.Add(Id, obj);
-      Id += 1;
-    }
-    public void AddAir(string name, int speed, int[] reducer, int[] interval, bool e) {
-      Air obj = new Air(name, speed, reducer, interval, e);
-      Air.Add(Id, obj);
-      Id += 1;
+    public Game() {
+      Transports = new List<Transport>();
+      RaceType = 3;
+      RegisteredTransports = new List<int>();
+      Distance = 0;
     }
 
-    public double LandTime(int id, double distance) {
-      int speed = this.GetLand()[id].GetSpeed();
-      int interval = this.GetLand()[id].GetRestInterval();
-      double[] duration = this.GetLand()[id].GetRestDuration();
-      int restnumber =  Convert.ToInt32(distance / (speed * interval));
-      double totalrest = 0;
-      int flag = 0;
-      for (int i = 0; i < restnumber; i++) {
-        if (i <= duration.Length - 1) {
-          flag = i;
-          totalrest += duration[i];
-        }
-        else {
-          totalrest += duration[flag];
-        }
+    public void Add(string name, int speed, bool type, int restInterval, double[] restDuration, int[] distReducer, int[] distInterval, bool e) {
+      if (type == false)
+        Transports.Add(new Land(name, speed, type, restInterval, restDuration));
+      else
+        Transports.Add(new Air(name, speed, type, distReducer, distInterval, e));
+    }
+
+    public void Register(int r_type, int[] ids, int distance) {
+      if (this.RaceType != 3) {
+        Console.WriteLine("Предстоящая гонка уже зарегистрирована");
+        return;
       }
-      double time = totalrest + distance / speed;
-      return time;
-    }
-    public double AirTime(int id, double distance) {
-      int speed = this.GetAir()[id].GetSpeed();
-      int[] interval = this.GetAir()[id].GetDistanceInterval();
-      int[] reducer = this.GetAir()[id].GetDistanceReducer();
-      bool e = this.GetAir()[id].GetEvenly();
-      double time = 0;
-      int r = 0;
-      if (e == true) {
-        while(true) {
-          r += reducer[0];
-          distance -= interval[0];
-          if (distance >= 0) {
-            time += (100 + r) / 100 * interval[0] / speed;
-            if (distance == 0)
-              return time;
-            r += reducer[0];
-          }
-          else {
-            time += (100 + r) / 100 * (interval[0] + distance) / speed;
-            return time;
-          }
-        }
-      }
-      else {
-        if (interval.Length == 0) {
-          return (100 + reducer[0]) / 100 * distance / speed;
-        }
-        for (int i = 0; i < interval.Length; i++) {
-          if (distance < interval[i]) {
-            r = i;
-            break;
-          }
-        }
-        return (100 + reducer[r]) / 100 * distance / speed;
-      }
-    }
-
-    public void Race(int type, int[] ids, double distance) {
-      double Min = 999999;
-      int MinId = -1;
-      switch (type) {
-        case 0: //land
+      switch (r_type) {
+        case 0: //Land
           for (int i = 0; i < ids.Length; i++) {
-            if (!this.GetLand().ContainsKey(ids[i])) {
+            if (!this.GetTransports().Contains(this.GetTransports()[ids[i]])) {
               Console.WriteLine("Наземного транспорта с id " + ids[i] + " не существует");
               return;
             }
-          }
-          Console.WriteLine("Гонка началась");
-          for (int i = 0; i < ids.Length; i++) {
-            if (Min > this.LandTime(ids[i], distance)) {
-              Min = this.LandTime(ids[i], distance);
-              MinId = ids[i];
-            }
-          }
-          Console.WriteLine("Победитель гонки: " + this.GetLand()[MinId].GetName());
-          break;
-        case 1: //air
-          for (int i = 0; i < ids.Length; i++) {
-            if (!this.GetAir().ContainsKey(ids[i])) {
-              Console.WriteLine("Воздушного транспорта с id " + ids[i] + " не существует");
+            if (this.GetTransports()[ids[i]].GetType() != false) {
+              Console.WriteLine("Транспорт с id " + ids[i] + " не является наземным");
               return;
             }
+            RegisteredTransports.Add(ids[i]);
           }
-          Console.WriteLine("Гонка началась");
-          for (int i = 0; i < ids.Length; i++) {
-            if (Min > this.AirTime(ids[i], distance)) {
-              Min = this.AirTime(ids[i], distance);
-              MinId = ids[i];
-            }
-          }
-          Console.WriteLine("Победитель гонки: " + this.GetAir()[MinId].GetName());
+          Distance = distance;
+          RaceType = r_type;
           break;
-        case 2: //air&land
-          Console.WriteLine("Гонка началась");
+        case 1: //Air
           for (int i = 0; i < ids.Length; i++) {
-            if (!this.GetAir().ContainsKey(ids[i]))
-              continue;
-            if (Min > this.AirTime(ids[i], distance)) {
-              Min = this.AirTime(ids[i], distance);
-              MinId = ids[i];
+            if (!this.GetTransports().Contains(this.GetTransports()[ids[i]])) {
+              Console.WriteLine("Наземного транспорта с id " + ids[i] + " не существует");
+              return;
             }
+            if (this.GetTransports()[ids[i]].GetType() != true) {
+              Console.WriteLine("Транспорт с id " + ids[i] + " не является воздушным");
+              return;
+            }
+            RegisteredTransports.Add(ids[i]);
           }
+          Distance = distance;
+          RaceType = r_type;
+          break;
+        case 2: //Air&Land
           for (int i = 0; i < ids.Length; i++) {
-            if (!this.GetLand().ContainsKey(ids[i]))
-              continue;
-            if (Min > this.LandTime(ids[i], distance)) {
-              Min = this.LandTime(ids[i], distance);
-              MinId = ids[i];
+            if (!this.GetTransports().Contains(this.GetTransports()[ids[i]])) {
+              Console.WriteLine("Наземного транспорта с id " + ids[i] + " не существует");
+              return;
             }
+            RegisteredTransports.Add(ids[i]);
           }
-          if (!this.GetAir().ContainsKey(MinId))
-            Console.WriteLine("Победитель гонки: " + this.GetLand()[MinId].GetName());
-          else
-            Console.WriteLine("Победитель гонки: " + this.GetAir()[MinId].GetName());
+          Distance = distance;
+          RaceType = r_type;
           break;
       }
     }
 
-    public void Display() {
-      Console.WriteLine("Air:");
-      foreach(KeyValuePair<int, Air> tr in this.GetAir())
-        Console.WriteLine(tr.Key + " " + tr.Value.GetName() + " " + tr.Value.GetSpeed());
-      Console.WriteLine("Land:");
-      foreach(KeyValuePair<int, Land> tr in this.GetLand())
-        Console.WriteLine(tr.Key + " " + tr.Value.GetName() + " " + tr.Value.GetSpeed());
+    public void StartRace() {
+      if (this.GetRaceType() == 3) {
+        Console.WriteLine("Гонка еще не была объявлена");
+        return;
+      }
+      int WinnerId = 0;
+      double Min = 9999999;
+      foreach(int id in this.GetRegisteredTransports()) {
+        double time = this.GetTransports()[id].GetTime(this.GetDistance());
+        if (Min > time) {
+          Min = time;
+          WinnerId = id;
+        }
+      }
+      RaceType = 3;
+      this.GetRegisteredTransports().Clear();
+      Distance = 0;
+      Console.WriteLine(this.GetTransports()[WinnerId].GetName());
     }
 
-    public Dictionary<int, Air> GetAir() {
-      return Air;
-    }
-    public Dictionary<int, Land> GetLand() {
-      return Land;
-    }
+    public int GetDistance() { return Distance; }
+    public List<int> GetRegisteredTransports() { return RegisteredTransports; }
+    public int GetRaceType() { return RaceType; }
+    public List<Transport> GetTransports() { return Transports; }
 
   }
 }
